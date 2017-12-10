@@ -211,7 +211,7 @@ public class Tela extends javax.swing.JFrame {
         jTextAreaS.append(this.conjProd.geraPalavra());
         jTextAreaS.append(this.conjProd.geraPalavra());
         
-        
+        this.conjProd.removeInfertilEInutil();
         
     }//GEN-LAST:event_jButton3ActionPerformed
 

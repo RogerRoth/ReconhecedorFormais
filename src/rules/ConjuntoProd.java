@@ -187,5 +187,124 @@ public class ConjuntoProd {
         return txt;
     }  
 
+       
+    public void removeInfertilEInutil(){
+        int index;
+        int repete=1;
+        String nTerminal, textAuxB = "";
+        String producoesTodas = "",nTermTodas = "";
+        
+        List<String> termFertil = new LinkedList<>();   // Nao terminais Ferteis
+        
+        List<String> termNaoFertil = new LinkedList<>();    // Nao terminais Inferteis ou inuteis
+        
+        List<String> deProdRemove = new LinkedList<>(); //Nao terminais que estao na producao a ser removido
+        
+        for(Producao p: this.conjProd ){        //Filtra somente os nao terminais Ferteis
+            nTerminal = p.nTerm;
+            for(Producao aux: this.conjProd ){
+                for (String vxx : aux.prod) {
+                    if(vxx.contains(nTerminal) || this.termIni.contains(nTerminal) ){
+                        if(termFertil.contains(nTerminal)){
+                            repete++;
+                        }else{
+                            termFertil.add(nTerminal);      //adiciona a lista
+                        }
+                    }
+                }
+            }
+        }
+        
+        for(String aux:termFertil){
+            System.out.println("Terminal fertil: "+aux);
+        }
+        
+        for(Producao p: this.conjProd ){        //Adiciona todos nao terminais em uma string
+            nTermTodas = nTermTodas + p.nTerm;
+        }
+        String esqn = "";
+        String dirn = "";
+        
+        for(int a=0; a <= repete; a++ ){
+            for(String aux:termFertil){
+                
+                index = nTermTodas.indexOf(aux);
+                if(index != -1){
+                    if (!nTermTodas.isEmpty()) esqn = nTermTodas.substring (0, index);
+                    //System.out.println(esqn);
+                    if (!nTermTodas.isEmpty()) dirn = nTermTodas.substring (index+1, nTermTodas.length());
+                    //System.out.println(dirn);
+                    nTermTodas = esqn + dirn;   //string que recebe todos os inferteis
+                }
+            }
+        }
+        
+        for(int b = 0; b<nTermTodas.length(); b++){     //Remove nao terminais inferteis e suas producoes
+            for(Producao p: this.conjProd ){
+                if(nTermTodas.substring(b, b+1).equals(p.nTerm)){
+                    this.conjProd.remove(p);
+                    termNaoFertil.add(nTermTodas.substring(b, b+1));
+                    break;
+                }
+            }
+        }
+        for(Producao p: this.conjProd ){    //adiciona todas as producoes em uma string
+            for(String texto : p.prod){
+                producoesTodas = producoesTodas + texto;
+            }
+        }
+        String esq = "";
+        String dir = "";
+        for(int z=0; z <= repete; z++ ){        //Adiciona todos os terminais e os nao terminais inferteis que estao nas producoes em uma string
+            for(String aux:termFertil){
+                index = producoesTodas.indexOf(aux);
+                if(index != -1){
+                    if (!producoesTodas.isEmpty()) esq = producoesTodas.substring (0, index);
+                    //System.out.println(esq);
+                    if (!producoesTodas.isEmpty()) dir = producoesTodas.substring (index+1, producoesTodas.length());
+                    //System.out.println(dir);
+                    producoesTodas = esq + dir;   
+                }
+            }
+        }
+        String textAux = producoesTodas.toUpperCase();
+        
+        for(int y = 0; y<producoesTodas.length(); y++){     //Filtra somente o nao terminal infertil
+            if(textAux.substring(y, y+1).equals(producoesTodas.substring(y, y+1))){
+                if(!textAux.substring(y, y+1).equals("&")){
+                    textAuxB = producoesTodas.substring (y, y+1);
+                    deProdRemove.add(textAuxB);     //adiciona os nao terminais que estao nas producoes na lista
+                }
+            }
+        }
+        
+        for(Producao p: this.conjProd ){
+            System.out.printf(p.nTerm+" -> ");
+            for(String texto : p.prod){
+                System.out.printf(" "+texto);
+            }
+            System.out.println("");
+        }
+        System.out.println("*********** Removendo inuteis e não ferteis ****************");
+        
+        for(String pToRem: deProdRemove ){      //Remove nao terminais inferteis das producoes
+            for(Producao aux: this.conjProd ){
+                for (String vxx : aux.prod) {
+                    if(vxx.contains(pToRem)){
+                        aux.prod.remove(vxx);
+                        break;
+                    }
+                }
+            }
+        }
+        for(Producao p: this.conjProd ){
+            System.out.printf(p.nTerm+" -> ");
+            
+            for(String texto : p.prod){
+                System.out.printf(" "+texto);
+            }
+            System.out.println("");
+        } 
+    }
     
 }
