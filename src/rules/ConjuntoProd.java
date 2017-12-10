@@ -297,6 +297,9 @@ public class ConjuntoProd {
                 }
             }
         }
+        
+        this.removeLoop();//Deixar essa função para o final, só chamar ela após a remoção dos nao terminais Inferteis ou inuteis.
+        
         for(Producao p: this.conjProd ){
             System.out.printf(p.nTerm+" -> ");
             
@@ -305,6 +308,32 @@ public class ConjuntoProd {
             }
             System.out.println("");
         } 
+    }
+    
+    public void removeLoop(){
+        boolean remover = true;
+        
+        for(Producao p: this.conjProd ){
+            
+            for(String texto : p.prod){
+                
+                for(String term: this.conjTerm){
+                    if(texto.equals(term)){
+                        remover = false;
+                    }
+                }
+            }
+            if(remover == true){
+                for(String textProd : p.prod){
+
+                    if (textProd.contains(p.nTerm) && !textProd.contains("&")){
+                        this.conjProd.remove(p);
+                    }
+                }
+            }
+            
+        }
+        
     }
     
 }
