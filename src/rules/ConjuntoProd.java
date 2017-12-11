@@ -299,6 +299,7 @@ public class ConjuntoProd {
         }
         
         this.removeLoop();//Deixar essa função para o final, só chamar ela após a remoção dos nao terminais Inferteis ou inuteis.
+        this.removeUnitaria(termFertil);//envia a lista termFertil
         
         for(Producao p: this.conjProd ){
             System.out.printf(p.nTerm+" -> ");
@@ -336,4 +337,42 @@ public class ConjuntoProd {
         
     }
     
+    public void removeUnitaria(List<String> ntermFertil){ //Recebe a lista gerada no metodo removeInfertilEInutil()
+        List<String> prod = null;
+        boolean removido;   //variavel de controle, adicionei pois estava dando erro no for(String textProd : p.prod)
+        
+        for(int i = 1; i<this.conjProd.size() ;i++){
+            
+            removido = false;
+            
+            for(Producao p: this.conjProd ){
+                
+                removido = false;
+                
+                for(String textProd : p.prod){
+
+                    for(String nterFertil: ntermFertil){
+
+                        if(textProd.equals(nterFertil)){    //Procura pela produção unitaria
+
+                            for(Producao p_aux: this.conjProd ){    //Procura as produções que pertencem a unitaria
+                                if(p_aux.nTerm.equals(nterFertil)){
+                                    prod = p_aux.prod;
+
+                                    p.prod.remove(nterFertil);
+                                    p.prod.addAll(prod);
+                                    prod = null;        //zera lista auxiliar
+                                    removido = true;
+                                } 
+                            }
+                        }
+                    }
+
+                    if(removido == true){
+                        break;
+                    }
+                }
+            }
+        }
+    }
 }
